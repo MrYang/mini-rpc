@@ -1,15 +1,25 @@
 group 'com.zz'
 version '1.0'
 
-apply plugin: 'java'
+subprojects { subproj ->
+    apply plugin: 'java'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+    group 'com.zz'
+    version '1.0'
 
-repositories {
-    jcenter()
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        compile 'org.springframework:spring-context:4.3.3.RELEASE'
+        compile 'io.netty:netty-all:4.0.30.Final'
+        testCompile 'junit:junit:4.12'
+    }
 }
 
-dependencies {
-    testCompile 'junit:junit:4.12'
-}
+
+

@@ -1,2 +1,10 @@
 rootProject.name = 'simple-rpc'
+include 'simple-rpc-netty'
+include 'simple-rpc-spring'
+include 'simple-rpc-core'
+include 'simple-rpc-common'
 
+include 'simple-rpc-demo'
+include 'simple-rpc-demo:demo-server'
+include 'simple-rpc-demo:demo-client'
+include 'simple-rpc-demo:demo-api'
