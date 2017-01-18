@@ -2,6 +2,7 @@ package com.zz.rpc.spring;
 
 import com.zz.rpc.spring.config.ServiceConfigBean;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -59,7 +60,19 @@ public class RpcBeanDefinitionParser implements BeanDefinitionParser {
                 Node node = attributes.item(i);
                 String name = node.getLocalName();
                 String value = node.getNodeValue();
-                bd.getPropertyValues().add(name, value);
+                if ("ref".equals(name)) {
+                    if (parserContext.getRegistry().containsBeanDefinition(value)) {
+                        BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(value);
+                        if (!refBean.isSingleton()) {
+                            throw new IllegalStateException("The exported service ref " + value + " must be singleton! Please set the " + value
+                                    + " bean scope to singleton, eg: <bean id=\"" + value + "\" scope=\"singleton\" ...>");
+                        }
+                    }
+                    Object reference = new RuntimeBeanReference(value);
+                    bd.getPropertyValues().add(name, reference);
+                } else {
+                    bd.getPropertyValues().add(name, value);
+                }
             }
         }
 

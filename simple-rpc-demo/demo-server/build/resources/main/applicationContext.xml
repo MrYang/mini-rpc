@@ -7,5 +7,5 @@
        http://rpc.zz.com/schema/rpc http://rpc.zz.com/schema/rpc.xsd">
 
     <bean id="helloServiceImpl" class="com.zz.rpc.demo.server.HelloServiceImpl"/>
-    <rpc:service interfaceClass="com.zz.rpc.demo.api.HelloService" ref="helloServiceImpl" />
+    <rpc:service interfaceClass="com.zz.rpc.demo.api.HelloService" ref="helloServiceImpl"/>
 </beans>

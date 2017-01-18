@@ -21,10 +21,17 @@ subprojects { subproj ->
     }
 }
 
+project(":simple-rpc-netty") {
+    dependencies {
+        compile project(":simple-rpc-core")
+    }
+}
+
 project(":simple-rpc-demo:demo-server") {
     dependencies {
         compile project(":simple-rpc-demo:demo-api")
         compile project(":simple-rpc-spring")
+        compile project(":simple-rpc-netty")
     }
 }
 
@@ -32,6 +39,7 @@ project(":simple-rpc-demo:demo-client") {
     dependencies {
         compile project(":simple-rpc-demo:demo-api")
         compile project(":simple-rpc-spring")
+        compile project(":simple-rpc-netty")
     }
 }
 

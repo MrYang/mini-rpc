@@ -4,7 +4,7 @@ public class ServiceConfigBean<T> {
 
     private String id;
     private Class<T> interfaceClass;
-    private String ref;
+    private T ref;
 
     public String getId() {
         return id;
@@ -22,11 +22,11 @@ public class ServiceConfigBean<T> {
         this.interfaceClass = interfaceClass;
     }
 
-    public String getRef() {
+    public T getRef() {
         return ref;
     }
 
-    public void setRef(String ref) {
+    public void setRef(T ref) {
         this.ref = ref;
     }
 }
