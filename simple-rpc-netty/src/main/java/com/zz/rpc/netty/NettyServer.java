@@ -41,8 +41,4 @@ public class NettyServer {
             bossGroup.shutdownGracefully();
         }
     }
-
-    public static void main(String[] args) {
-        new NettyServer().start();
-    }
 }

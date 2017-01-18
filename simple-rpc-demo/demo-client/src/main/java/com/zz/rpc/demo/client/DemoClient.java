@@ -9,6 +9,8 @@ public class DemoClient {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
         HelloService helloService = applicationContext.getBean(HelloService.class);
-        helloService.hello("abc");
+        for (int i = 0; i < 100; i++) {
+            System.out.println(helloService.hello("abc" + i));
+        }
     }
 }
