@@ -13,7 +13,7 @@ public class NettyServer {
 
     private static final Integer PORT = 3000;
 
-    private void start() throws Exception {
+    public void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -32,11 +32,17 @@ public class NettyServer {
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             ChannelFuture f = b.bind(PORT).sync();
-
+            System.out.println("netty server start...");
             f.channel().closeFuture().sync();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    public static void main(String[] args) {
+        new NettyServer().start();
     }
 }

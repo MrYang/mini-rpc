@@ -27,6 +27,12 @@ project(":simple-rpc-netty") {
     }
 }
 
+project(":simple-rpc-spring") {
+    dependencies {
+        compile project(":simple-rpc-netty")
+    }
+}
+
 project(":simple-rpc-demo:demo-server") {
     dependencies {
         compile project(":simple-rpc-demo:demo-api")
