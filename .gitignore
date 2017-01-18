@@ -5,9 +5,9 @@ out
 *.iml
 
 /target
-*/target
+**/target
 /build
-*/build
+**/build
 
 .classpath
 .project
@@ -15,4 +15,4 @@ out
 .metadata
 
 /.gradle
-*/.gradle
+**/.gradle
