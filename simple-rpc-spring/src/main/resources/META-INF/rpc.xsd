@@ -65,7 +65,17 @@
     <xsd:element name="server">
         <xsd:complexType>
             <xsd:attribute name="id" type="xsd:ID"/>
-            <xsd:attribute name="port" type="xsd:integer"/>
+            <xsd:attribute name="port" type="xsd:integer">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ server listener port ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="client">
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID"/>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

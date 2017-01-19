@@ -8,6 +8,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,8 +28,15 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
         Object object = serviceMap.get(interfaceName);
         Method method = ClassUtils.getMethod(object.getClass(), methodName, parameterTypes);
-        Object result = method.invoke(object, parameters);
-        rpcResponse.setResult(result);
+        try {
+            Instant start = Instant.now();
+            Object result = method.invoke(object, parameters);
+            rpcResponse.setProcessTime(Duration.between(start, Instant.now()).toMillis());
+            rpcResponse.setResult(result);
+        } catch (Exception e) {
+            rpcResponse.setException(e);
+        }
+
         ctx.writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE);
     }
 

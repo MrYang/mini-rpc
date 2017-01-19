@@ -2,7 +2,7 @@ package com.zz.rpc.netty;
 
 import com.zz.rpc.core.RpcRequest;
 import com.zz.rpc.core.RpcResponse;
-import com.zz.rpc.registry.zookeeper.ZookeeperServiceDiscovery;
+import com.zz.rpc.core.registry.ServiceDiscovery;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
@@ -14,11 +14,11 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
     private AtomicLong atomicLong = new AtomicLong(0);
 
     private Class<T> clz;
-    private String registryAddress;
+    private ServiceDiscovery serviceDiscovery;
 
-    public RefererInvocationHandler(Class<T> clz, String registryAddress) {
+    public RefererInvocationHandler(Class<T> clz, ServiceDiscovery serviceDiscovery) {
         this.clz = clz;
-        this.registryAddress = registryAddress;
+        this.serviceDiscovery = serviceDiscovery;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -30,7 +30,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setParameterTypes(method.getParameterTypes());
         request.setInterfaceName(clz.getName());
 
-        String serviceAddress = new ZookeeperServiceDiscovery(registryAddress).discover(clz.getName());
+        String serviceAddress = serviceDiscovery.discover(clz.getName());
         if (StringUtils.isEmpty(serviceAddress)) {
             throw new RuntimeException("没有找到该服务");
         }

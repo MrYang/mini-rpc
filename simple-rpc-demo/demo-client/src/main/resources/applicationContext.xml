@@ -6,6 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://rpc.zz.com/schema/rpc http://rpc.zz.com/schema/rpc.xsd">
 
-    <rpc:registry address="127.0.0.1:2181"/>
+    <rpc:client/>
+    <rpc:registry protocol="zookeeper" address="127.0.0.1:2181"/>
     <rpc:referer interfaceClass="com.zz.rpc.demo.api.HelloService" id="helloService"/>
 </beans>
