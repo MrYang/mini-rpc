@@ -9,13 +9,14 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshedEvent>,ApplicationContextAware {
+public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware {
 
     private static boolean isStart = false;
 
     private String id;
     private Class<T> interfaceClass;
     private T ref;
+    private Integer port;
 
     public String getId() {
         return id;
@@ -41,10 +42,19 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
         this.ref = ref;
     }
 
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
-            new NettyServer().start();
+            int port = event.getApplicationContext().getBean(RegistryConfigBean.class).getServicePort();
+            new NettyServer(port).start();
             isStart = true;
         }
     }
@@ -53,6 +63,8 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Object bean = applicationContext.getBean(interfaceClass);
         RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
-        new ZookeeperServiceRegistry("127.0.0.1:2181").register(interfaceClass.getName(), "127.0.0.1:3000");
+        RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
+        String serviceAddress = "127.0.0.1:" + registryConfigBean.getServicePort();
+        new ZookeeperServiceRegistry(registryConfigBean.getAddress()).register(interfaceClass.getName(), serviceAddress);
     }
 }

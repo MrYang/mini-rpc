@@ -11,7 +11,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyServer {
 
-    private static final Integer PORT = 3000;
+    private int port;
+
+    public NettyServer(int port) {
+        this.port = port;
+    }
 
     public void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -31,7 +35,7 @@ public class NettyServer {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture f = b.bind(PORT).sync();
+            ChannelFuture f = b.bind(port).sync();
             System.out.println("netty server start...");
             f.channel().closeFuture().sync();
         } catch (Exception e) {

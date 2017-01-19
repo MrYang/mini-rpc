@@ -14,9 +14,11 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
     private AtomicLong atomicLong = new AtomicLong(0);
 
     private Class<T> clz;
+    private String registryAddress;
 
-    public RefererInvocationHandler(Class<T> clz) {
+    public RefererInvocationHandler(Class<T> clz, String registryAddress) {
         this.clz = clz;
+        this.registryAddress = registryAddress;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -28,7 +30,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setParameterTypes(method.getParameterTypes());
         request.setInterfaceName(clz.getName());
 
-        String serviceAddress = new ZookeeperServiceDiscovery("127.0.0.1:2181").discover(clz.getName());
+        String serviceAddress = new ZookeeperServiceDiscovery(registryAddress).discover(clz.getName());
         if (StringUtils.isEmpty(serviceAddress)) {
             throw new RuntimeException("没有找到该服务");
         }

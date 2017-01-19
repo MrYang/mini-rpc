@@ -1,6 +1,5 @@
 package com.zz.rpc.spring;
 
-import com.zz.rpc.spring.config.ServiceConfigBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -53,26 +52,25 @@ public class RpcBeanDefinitionParser implements BeanDefinitionParser {
         }
         bd.getPropertyValues().addPropertyValue("id", id);
 
-        if (beanClass.equals(ServiceConfigBean.class)) {
-            NamedNodeMap attributes = element.getAttributes();
-            int len = attributes.getLength();
-            for (int i = 0; i < len; i++) {
-                Node node = attributes.item(i);
-                String name = node.getLocalName();
-                String value = node.getNodeValue();
-                if ("ref".equals(name)) {
-                    if (parserContext.getRegistry().containsBeanDefinition(value)) {
-                        BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(value);
-                        if (!refBean.isSingleton()) {
-                            throw new IllegalStateException("The exported service ref " + value + " must be singleton! Please set the " + value
-                                    + " bean scope to singleton, eg: <bean id=\"" + value + "\" scope=\"singleton\" ...>");
-                        }
+        NamedNodeMap attributes = element.getAttributes();
+        int len = attributes.getLength();
+        for (int i = 0; i < len; i++) {
+            Node node = attributes.item(i);
+            String name = node.getLocalName();
+
+            String value = node.getNodeValue();
+            if ("ref".equals(name)) {
+                if (parserContext.getRegistry().containsBeanDefinition(value)) {
+                    BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(value);
+                    if (!refBean.isSingleton()) {
+                        throw new IllegalStateException("The exported service ref " + value + " must be singleton! Please set the " + value
+                                + " bean scope to singleton, eg: <bean id=\"" + value + "\" scope=\"singleton\" ...>");
                     }
-                    Object reference = new RuntimeBeanReference(value);
-                    bd.getPropertyValues().add(name, reference);
-                } else {
-                    bd.getPropertyValues().add(name, value);
                 }
+                Object reference = new RuntimeBeanReference(value);
+                bd.getPropertyValues().add(name, reference);
+            } else {
+                bd.getPropertyValues().add(name, value);
             }
         }
 
