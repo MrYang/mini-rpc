@@ -2,6 +2,7 @@ package com.zz.rpc.spring.config;
 
 import com.zz.rpc.netty.NettyServer;
 import com.zz.rpc.netty.RpcServerHandler;
+import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -52,5 +53,6 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Object bean = applicationContext.getBean(interfaceClass);
         RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
+        new ZookeeperServiceRegistry("127.0.0.1:2181").register(interfaceClass.getName(), "127.0.0.1:3000");
     }
 }

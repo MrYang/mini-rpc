@@ -10,10 +10,16 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class NettyClient {
 
+    private String host;
+    private int port;
+
+    public NettyClient(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
     public RpcResponse sendRequest(RpcRequest request) throws Exception {
         RpcClientHandler clientHandler = new RpcClientHandler();
-        String host = "127.0.0.1";
-        int port = 3000;
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
@@ -30,7 +36,6 @@ public class NettyClient {
                 }
             });
 
-            System.out.println("netty client connect...");
             ChannelFuture future = b.connect(host, port).sync();
             Channel channel = future.channel();
             channel.writeAndFlush(request).sync();
