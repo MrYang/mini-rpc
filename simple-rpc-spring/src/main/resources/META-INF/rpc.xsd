@@ -26,7 +26,6 @@
                     <xsd:documentation><![CDATA[ The service implementation instance bean id. ]]></xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="port" type="xsd:integer"/>
         </xsd:complexType>
     </xsd:element>
 
@@ -60,9 +59,13 @@
                     <xsd:documentation><![CDATA[ registry address, ip:port,ip:port ]]></xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="servicePort" type="xsd:integer"/>
         </xsd:complexType>
     </xsd:element>
 
-
+    <xsd:element name="server">
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID"/>
+            <xsd:attribute name="port" type="xsd:integer"/>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

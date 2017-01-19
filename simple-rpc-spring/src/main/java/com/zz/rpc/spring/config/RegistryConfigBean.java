@@ -6,7 +6,6 @@ public class RegistryConfigBean {
     private String name;
     private String protocol;
     private String address;
-    private Integer servicePort;
 
     public String getId() {
         return id;
@@ -38,13 +37,5 @@ public class RegistryConfigBean {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Integer getServicePort() {
-        return servicePort;
-    }
-
-    public void setServicePort(Integer servicePort) {
-        this.servicePort = servicePort;
     }
 }

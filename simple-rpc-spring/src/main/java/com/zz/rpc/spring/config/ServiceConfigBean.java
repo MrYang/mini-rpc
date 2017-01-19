@@ -16,7 +16,6 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
     private String id;
     private Class<T> interfaceClass;
     private T ref;
-    private Integer port;
 
     public String getId() {
         return id;
@@ -42,18 +41,10 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
         this.ref = ref;
     }
 
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
-            int port = event.getApplicationContext().getBean(RegistryConfigBean.class).getServicePort();
+            int port = event.getApplicationContext().getBean(ServerConfigBean.class).getPort();
             new NettyServer(port).start();
             isStart = true;
         }
@@ -64,7 +55,8 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
         Object bean = applicationContext.getBean(interfaceClass);
         RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
         RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
-        String serviceAddress = "127.0.0.1:" + registryConfigBean.getServicePort();
+        ServerConfigBean serverConfigBean = applicationContext.getBean(ServerConfigBean.class);
+        String serviceAddress = "127.0.0.1:" + serverConfigBean.getPort();
         new ZookeeperServiceRegistry(registryConfigBean.getAddress()).register(interfaceClass.getName(), serviceAddress);
     }
 }
