@@ -10,6 +10,7 @@ public class CallFilter extends AbstractFilter {
 
     @Override
     public void before(RpcRequest rpcRequest) {
+        System.out.println("before call");
         long beginTime = System.currentTimeMillis();
         startTimeThreadLocal.set(beginTime);
     }
@@ -20,6 +21,6 @@ public class CallFilter extends AbstractFilter {
         long beginTime = startTimeThreadLocal.get();
         long consumeTime = endTime - beginTime;
 
-        System.out.println("call consumeTime:" + consumeTime);
+        System.out.println("after call consumeTime:" + consumeTime);
     }
 }

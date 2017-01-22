@@ -8,12 +8,4 @@ public interface Filter {
     void before(RpcRequest rpcRequest);
 
     void after(RpcResponse response);
-
-    Filter previous();
-
-    void setPrevious(Filter filter);
-
-    Filter next();
-
-    void setNext(Filter filter);
 }

@@ -4,70 +4,28 @@ import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
 import com.zz.rpc.core.utils.ClassUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class FilterProcessor {
 
-    private static Filter beforeHead;
-    private static Filter afterHead;
-
-    private static List<Class<? extends Filter>> classList;
+    private static LinkedList<Filter> filters = new LinkedList<>();
 
     static {
-        classList = new ArrayList<>(2);
+        List<Class<? extends Filter>> classList = new LinkedList<>();
         classList.add(CallFilter.class);
-        //classList.add(LogFilter.class);
-    }
+        classList.add(LogFilter.class);
 
-    static {
-        List<Filter> list = new ArrayList<>();
-        classList.forEach(clazz -> list.add(ClassUtils.newInstance(clazz)));
-        setNext(list);
+        classList.forEach(clazz -> filters.add(ClassUtils.newInstance(clazz)));
     }
 
     public static void before(RpcRequest request) {
-        beforeHead.before(request);
-        Filter rpcFilter = beforeHead.next();
-        while (rpcFilter != null) {
-            rpcFilter.before(request);
-            rpcFilter = rpcFilter.next();
-        }
+        filters.forEach(filter -> filter.before(request));
     }
 
     public static void after(RpcResponse response) {
-        afterHead.after(response);
-        Filter rpcFilter = afterHead.previous();
-        while (rpcFilter != null) {
-            rpcFilter.after(response);
-            rpcFilter = rpcFilter.previous();
-        }
-    }
-
-    private static void setNext(List<Filter> list){
-        Iterator<Filter> it = list.iterator();
-        if (it.hasNext()) {
-            beforeHead = it.next();
-            Filter p = beforeHead;
-            while (it.hasNext()) {
-                Filter next = it.next();
-                p.setNext(next);
-                p = next;
-            }
-        }
-
-        Collections.reverse(list);
-        it = list.iterator();
-        if (it.hasNext()) {
-            afterHead = it.next();
-            Filter p = afterHead;
-            while (it.hasNext()) {
-                Filter next = it.next();
-                p.setPrevious(next);
-                p = next;
-            }
+        Iterator<Filter> iterator = filters.descendingIterator();
+        while (iterator.hasNext()) {
+            iterator.next().after(response);
         }
     }
 }
