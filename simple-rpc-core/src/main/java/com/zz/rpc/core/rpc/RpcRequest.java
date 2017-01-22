@@ -1,4 +1,4 @@
-package com.zz.rpc.core;
+package com.zz.rpc.core.rpc;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 package com.zz.rpc.netty;
 
-import com.zz.rpc.core.RpcResponse;
+import com.zz.rpc.core.rpc.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

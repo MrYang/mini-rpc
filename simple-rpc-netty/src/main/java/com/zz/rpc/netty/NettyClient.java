@@ -1,7 +1,7 @@
 package com.zz.rpc.netty;
 
-import com.zz.rpc.core.RpcRequest;
-import com.zz.rpc.core.RpcResponse;
+import com.zz.rpc.core.rpc.RpcRequest;
+import com.zz.rpc.core.rpc.RpcResponse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
