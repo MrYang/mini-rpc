@@ -1,5 +1,6 @@
 package com.zz.rpc.spring.config;
 
+import com.zz.rpc.core.utils.NetUtils;
 import com.zz.rpc.netty.NettyServer;
 import com.zz.rpc.netty.RpcServerHandler;
 import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
@@ -56,7 +57,7 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
         RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
         RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
         ServerConfigBean serverConfigBean = applicationContext.getBean(ServerConfigBean.class);
-        String serviceAddress = "127.0.0.1:" + serverConfigBean.getPort();
+        String serviceAddress = NetUtils.getLocalAddress().getHostAddress()+ ":" + serverConfigBean.getPort();
         new ZookeeperServiceRegistry(registryConfigBean.getAddress()).register(interfaceClass.getName(), serviceAddress);
     }
 }

@@ -1,5 +1,6 @@
 package com.zz.rpc.registry.zookeeper;
 
+import com.zz.rpc.core.constant.Constants;
 import com.zz.rpc.core.registry.ServiceDiscovery;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -21,7 +22,7 @@ public class ZookeeperServiceDiscovery implements ServiceDiscovery {
 
     @Override
     public String discover(String serviceName) {
-        String registryPath = "/rpc_registry";
+        String registryPath = Constants.ZOOKEEPER_REGISTRY_PATH;
         String servicePath = registryPath + "/" + serviceName;
         try {
             List<String> addressList = client.getChildren().forPath(servicePath);

@@ -10,7 +10,7 @@ public class DemoClient {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
         HelloService helloService = applicationContext.getBean(HelloService.class);
         for (int i = 0; i < 1000; i++) {
-            System.out.println(helloService.hello("abc" + i));
+            System.out.println(helloService.hello("rpc" + i));
         }
     }
 }

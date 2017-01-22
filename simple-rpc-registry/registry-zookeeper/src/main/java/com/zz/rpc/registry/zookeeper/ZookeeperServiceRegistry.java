@@ -1,5 +1,6 @@
 package com.zz.rpc.registry.zookeeper;
 
+import com.zz.rpc.core.constant.Constants;
 import com.zz.rpc.core.registry.ServiceRegistry;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -19,7 +20,7 @@ public class ZookeeperServiceRegistry implements ServiceRegistry {
 
     @Override
     public void register(String serviceName, String serviceAddress) {
-        String registryPath = "/rpc_registry";
+        String registryPath = Constants.ZOOKEEPER_REGISTRY_PATH;
         try {
             if (client.checkExists().forPath(registryPath) == null) {
                 client.create().forPath(registryPath);
@@ -28,7 +29,7 @@ public class ZookeeperServiceRegistry implements ServiceRegistry {
             if (client.checkExists().forPath(servicePath) == null) {
                 client.create().forPath(servicePath);
             }
-            String addressPath = servicePath + "/address";
+            String addressPath = servicePath + Constants.ZOOKEEPER_ADDRESS_NODE;
             client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(addressPath, serviceAddress.getBytes());
         } catch (Exception e) {
             throw new RuntimeException(e);
