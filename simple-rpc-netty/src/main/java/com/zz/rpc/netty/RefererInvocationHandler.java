@@ -1,5 +1,6 @@
 package com.zz.rpc.netty;
 
+import com.zz.rpc.core.filter.FilterProcessor;
 import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
 import com.zz.rpc.core.registry.ServiceDiscovery;
@@ -37,7 +38,9 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         String host = serviceAddress.split(":")[0];
         int port = Integer.parseInt(serviceAddress.split(":")[1]);
         NettyClient client = new NettyClient(host, port);
+        FilterProcessor.before(request);
         RpcResponse response = client.sendRequest(request);
+        FilterProcessor.after(response);
         return response.getResult();
     }
 

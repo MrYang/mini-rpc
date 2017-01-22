@@ -9,7 +9,7 @@ public class DemoClient {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
         HelloService helloService = applicationContext.getBean(HelloService.class);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println(helloService.hello("rpc" + i));
         }
     }
