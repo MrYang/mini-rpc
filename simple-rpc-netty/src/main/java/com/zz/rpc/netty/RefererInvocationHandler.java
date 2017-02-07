@@ -1,13 +1,14 @@
 package com.zz.rpc.netty;
 
 import com.zz.rpc.core.filter.FilterProcessor;
+import com.zz.rpc.core.registry.ServiceDiscovery;
 import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
-import com.zz.rpc.core.registry.ServiceDiscovery;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class RefererInvocationHandler<T> implements InvocationHandler {
@@ -16,10 +17,12 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
 
     private Class<T> clz;
     private ServiceDiscovery serviceDiscovery;
+    private NettyClient client;
 
-    public RefererInvocationHandler(Class<T> clz, ServiceDiscovery serviceDiscovery) {
+    public RefererInvocationHandler(Class<T> clz, ServiceDiscovery serviceDiscovery, NettyClient nettyClient) {
         this.clz = clz;
         this.serviceDiscovery = serviceDiscovery;
+        client = nettyClient;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -35,11 +38,12 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         if (StringUtils.isEmpty(serviceAddress)) {
             throw new RuntimeException("没有找到该服务");
         }
-        String host = serviceAddress.split(":")[0];
-        int port = Integer.parseInt(serviceAddress.split(":")[1]);
-        NettyClient client = new NettyClient(host, port);
         FilterProcessor.before(request);
-        RpcResponse response = client.sendRequest(request);
+        CompletableFuture<RpcResponse> future = client.sendRequest(request);
+        if (future == null) {
+            throw new RuntimeException("future is null");
+        }
+        RpcResponse response = future.get();
         FilterProcessor.after(response);
         return response.getResult();
     }

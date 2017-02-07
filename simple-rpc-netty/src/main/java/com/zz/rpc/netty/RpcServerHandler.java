@@ -2,7 +2,6 @@ package com.zz.rpc.netty;
 
 import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.util.ClassUtils;
@@ -37,7 +36,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
             rpcResponse.setException(e);
         }
 
-        ctx.writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE);
+        ctx.writeAndFlush(rpcResponse);
     }
 
     @Override
