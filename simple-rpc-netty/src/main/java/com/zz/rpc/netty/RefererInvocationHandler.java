@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -17,12 +19,12 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
 
     private Class<T> clz;
     private ServiceDiscovery serviceDiscovery;
-    private NettyClient client;
+    private List<NettyClient> clients;
 
-    public RefererInvocationHandler(Class<T> clz, ServiceDiscovery serviceDiscovery, NettyClient nettyClient) {
+    public RefererInvocationHandler(Class<T> clz, ServiceDiscovery serviceDiscovery, List<NettyClient> clients) {
         this.clz = clz;
         this.serviceDiscovery = serviceDiscovery;
-        client = nettyClient;
+        this.clients = clients;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -39,6 +41,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
             throw new RuntimeException("没有找到该服务");
         }
         FilterProcessor.before(request);
+        NettyClient client = clients.get(new Random().nextInt(clients.size()));
         CompletableFuture<RpcResponse> future = client.sendRequest(request);
         if (future == null) {
             throw new RuntimeException("future is null");

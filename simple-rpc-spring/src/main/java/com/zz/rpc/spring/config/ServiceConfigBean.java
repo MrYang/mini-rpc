@@ -1,14 +1,11 @@
 package com.zz.rpc.spring.config;
 
 import com.zz.rpc.core.utils.NetUtils;
-import com.zz.rpc.netty.NettyServer;
 import com.zz.rpc.netty.RpcServerHandler;
 import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 
 public class ServiceConfigBean<T> implements ApplicationContextAware {
 
@@ -42,8 +39,7 @@ public class ServiceConfigBean<T> implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Object bean = applicationContext.getBean(interfaceClass);
-        RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
+        RpcServerHandler.serviceMap.put(interfaceClass.getName(), this.ref);
         ServerConfigBean serverConfigBean = applicationContext.getBean(ServerConfigBean.class);
         String serviceAddress = NetUtils.getLocalAddress().getHostAddress() + ":" + serverConfigBean.getPort();
         ZookeeperServiceRegistry zookeeperServiceRegistry = applicationContext.getBean(ZookeeperServiceRegistry.class);

@@ -18,6 +18,8 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest req) throws Exception {
+        System.out.println("requestId:" + req.getRequestId());
+
         RpcResponse rpcResponse = new RpcResponse();
         rpcResponse.setRequestId(req.getRequestId());
         String interfaceName = req.getInterfaceName();

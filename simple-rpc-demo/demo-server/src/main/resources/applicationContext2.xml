@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="http://rpc.zz.com/schema/rpc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://rpc.zz.com/schema/rpc http://rpc.zz.com/schema/rpc.xsd">
+
+    <rpc:server port="3001"/>
+    <rpc:registry protocol="zookeeper" address="127.0.0.1:2181"/>
+
+    <bean id="helloServiceImpl" class="com.zz.rpc.demo.server.HelloServiceImpl"/>
+    <bean id="helloService2Impl" class="com.zz.rpc.demo.server.HelloService2Impl"/>
+    <rpc:service interfaceClass="com.zz.rpc.demo.api.HelloService" ref="helloServiceImpl"/>
+    <rpc:service interfaceClass="com.zz.rpc.demo.api.HelloService2" ref="helloService2Impl"/>
+</beans>

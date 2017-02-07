@@ -8,6 +8,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ZookeeperServiceDiscovery implements ServiceDiscovery {
@@ -24,11 +25,14 @@ public class ZookeeperServiceDiscovery implements ServiceDiscovery {
     public String discover(String serviceName) {
         String registryPath = Constants.ZOOKEEPER_REGISTRY_PATH;
         String servicePath = registryPath + "/" + serviceName;
+        List<String> serviceList = new ArrayList<>();
         try {
             List<String> addressList = client.getChildren().forPath(servicePath);
             if (!CollectionUtils.isEmpty(addressList)) {
-                String address = addressList.get(0);
-                return new String(client.getData().forPath(servicePath + "/" + address));
+                for (String address : addressList) {
+                    serviceList.add(new String(client.getData().forPath(servicePath + "/" + address)));
+                }
+                return String.join(",", serviceList);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
