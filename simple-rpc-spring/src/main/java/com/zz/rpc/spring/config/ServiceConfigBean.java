@@ -55,9 +55,9 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Object bean = applicationContext.getBean(interfaceClass);
         RpcServerHandler.serviceMap.put(interfaceClass.getName(), bean);
-        RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
         ServerConfigBean serverConfigBean = applicationContext.getBean(ServerConfigBean.class);
-        String serviceAddress = NetUtils.getLocalAddress().getHostAddress()+ ":" + serverConfigBean.getPort();
-        new ZookeeperServiceRegistry(registryConfigBean.getAddress()).register(interfaceClass.getName(), serviceAddress);
+        String serviceAddress = NetUtils.getLocalAddress().getHostAddress() + ":" + serverConfigBean.getPort();
+        ZookeeperServiceRegistry zookeeperServiceRegistry = applicationContext.getBean(ZookeeperServiceRegistry.class);
+        zookeeperServiceRegistry.register(interfaceClass.getName(), serviceAddress);
     }
 }

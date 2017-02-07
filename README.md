@@ -1,7 +1,7 @@
 # simple rpc
 
 
-参考微博[moton](https://github.com/weibocom/motan/blob/master/docs/wiki/zh_quickstart.md)及dubbo框架实现
+参考微博[motan](https://github.com/weibocom/motan/blob/master/docs/wiki/zh_quickstart.md)及dubbo框架实现
 
 ## 系统依赖
 
