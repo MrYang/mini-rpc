@@ -1,13 +1,16 @@
 package com.zz.rpc.spring.config;
 
+import com.zz.rpc.netty.NettyServer;
 import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 
-public class ServerConfigBean implements ApplicationContextAware {
+public class ServerConfigBean implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware {
 
     private String id;
     private Integer port;
@@ -36,5 +39,10 @@ public class ServerConfigBean implements ApplicationContextAware {
         beanDefinitionBuilder.addConstructorArgValue(registryAddress);
         DefaultListableBeanFactory acf = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         acf.registerBeanDefinition("zookeeperServiceRegistry", beanDefinitionBuilder.getBeanDefinition());
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        new NettyServer(port).start();
     }
 }

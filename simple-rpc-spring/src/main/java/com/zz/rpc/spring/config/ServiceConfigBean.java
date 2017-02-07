@@ -10,9 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware {
-
-    private static boolean isStart = false;
+public class ServiceConfigBean<T> implements ApplicationContextAware {
 
     private String id;
     private Class<T> interfaceClass;
@@ -40,15 +38,6 @@ public class ServiceConfigBean<T> implements ApplicationListener<ContextRefreshe
 
     public void setRef(T ref) {
         this.ref = ref;
-    }
-
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (!isStart) {
-            int port = event.getApplicationContext().getBean(ServerConfigBean.class).getPort();
-            new NettyServer(port).start();
-            isStart = true;
-        }
     }
 
     @Override
