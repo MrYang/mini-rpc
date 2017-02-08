@@ -6,12 +6,12 @@ import com.zz.rpc.core.rpc.RpcResponse;
 public class LogFilter extends AbstractFilter {
 
     @Override
-    public void before(RpcRequest rpcRequest) {
-        System.out.println("before log");
+    public void before(RpcRequest request) {
+
     }
 
     @Override
     public void after(RpcResponse response) {
-        System.out.println("after log");
+
     }
 }

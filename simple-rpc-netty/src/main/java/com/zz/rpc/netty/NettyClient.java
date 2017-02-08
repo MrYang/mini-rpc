@@ -66,11 +66,11 @@ public class NettyClient {
             });
             this.channel = future.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    public CompletableFuture<RpcResponse> sendRequest(RpcRequest request) throws Exception {
+    CompletableFuture<RpcResponse> sendRequest(RpcRequest request) throws Exception {
         CompletableFuture<RpcResponse> cf = new CompletableFuture<>();
         futureMap.put(request.getRequestId(), cf);
         Channel channel = getChannel();
@@ -82,11 +82,11 @@ public class NettyClient {
         return null;
     }
 
-    public CompletableFuture<RpcResponse> getFuture(Long requestId) {
+    CompletableFuture<RpcResponse> getFuture(Long requestId) {
         return futureMap.get(requestId);
     }
 
-    public void removeFuture(Long requestId) {
+    void removeFuture(Long requestId) {
         futureMap.remove(requestId);
     }
 

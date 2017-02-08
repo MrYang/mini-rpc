@@ -6,7 +6,7 @@ import com.zz.rpc.core.rpc.RpcResponse;
 public abstract class AbstractFilter implements Filter {
 
     @Override
-    public void before(RpcRequest rpcRequest) {
+    public void before(RpcRequest request) {
 
     }
 

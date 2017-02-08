@@ -56,8 +56,7 @@ public class ServerConfigBean implements ApplicationListener<ContextRefreshedEve
     @Override
     public void destroy() throws Exception {
         nettyServer.close();
-        System.out.println("destroy");
         ZookeeperServiceRegistry zookeeperServiceRegistry = applicationContext.getBean(ZookeeperServiceRegistry.class);
-        zookeeperServiceRegistry.unRegister("");
+        zookeeperServiceRegistry.unRegister();
     }
 }

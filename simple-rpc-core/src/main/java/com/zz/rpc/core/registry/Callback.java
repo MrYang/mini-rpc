@@ -6,6 +6,15 @@ package com.zz.rpc.core.registry;
  */
 public interface Callback {
 
-    void add(String clientAddress);
-    void remove(String clientAddress);
+    /**
+     * 添加server
+     * @param serverAddress netty服务器提供rpc服务地址
+     */
+    void add(String serverAddress);
+
+    /**
+     * 移除server
+     * @param serverAddress netty服务器提供rpc服务地址
+     */
+    void remove(String serverAddress);
 }

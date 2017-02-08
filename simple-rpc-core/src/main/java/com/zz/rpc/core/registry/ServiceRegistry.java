@@ -4,5 +4,5 @@ public interface ServiceRegistry {
 
     void register(String serviceName, String serviceAddress);
 
-    void unRegister(String serviceAddress);
+    void unRegister();
 }

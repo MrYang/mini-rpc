@@ -37,7 +37,7 @@ public class ZookeeperServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public void unRegister(String serviceAddress) {
+    public void unRegister() {
         client.close();
     }
 }

@@ -57,17 +57,17 @@ public class RefererConfigBean<T> implements FactoryBean<T>, ApplicationContextA
         ServiceDiscovery serviceDiscovery = applicationContext.getBean(ZookeeperServiceDiscovery.class);
         String serviceAddress = serviceDiscovery.discover(interfaceClass.getName(), new Callback() {
             @Override
-            public void add(String clientAddress) {
-                String host = clientAddress.split(":")[0];
-                int port = Integer.parseInt(clientAddress.split(":")[1]);
+            public void add(String serverAddress) {
+                String host = serverAddress.split(":")[0];
+                int port = Integer.parseInt(serverAddress.split(":")[1]);
                 NettyClient nettyClient = new NettyClient(host, port);
                 clients.add(nettyClient);
             }
 
             @Override
-            public void remove(String clientAddress) {
-                String host = clientAddress.split(":")[0];
-                int port = Integer.parseInt(clientAddress.split(":")[1]);
+            public void remove(String serverAddress) {
+                String host = serverAddress.split(":")[0];
+                int port = Integer.parseInt(serverAddress.split(":")[1]);
                 Iterator<NettyClient> iterator = clients.iterator();
                 while (iterator.hasNext()) {
                     NettyClient nettyClient = iterator.next();

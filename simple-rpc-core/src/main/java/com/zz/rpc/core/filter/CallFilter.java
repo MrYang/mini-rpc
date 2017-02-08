@@ -9,8 +9,7 @@ public class CallFilter extends AbstractFilter {
     private NamedThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<>("StopWatch-StartTime");
 
     @Override
-    public void before(RpcRequest rpcRequest) {
-        System.out.println("before call");
+    public void before(RpcRequest request) {
         long beginTime = System.currentTimeMillis();
         startTimeThreadLocal.set(beginTime);
     }

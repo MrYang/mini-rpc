@@ -5,7 +5,7 @@ import com.zz.rpc.core.rpc.RpcResponse;
 
 public interface Filter {
 
-    void before(RpcRequest rpcRequest);
+    void before(RpcRequest request);
 
     void after(RpcResponse response);
 }
