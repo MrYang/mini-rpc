@@ -1,11 +1,11 @@
 group 'com.zz'
-version '0.0.1'
+version '0.0.2'
 
 subprojects { subproj ->
     apply plugin: 'java'
 
     group 'com.zz'
-    version '0.0.1'
+    version '0.0.2'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
