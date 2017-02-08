@@ -13,8 +13,12 @@ public class DemoClient {
             System.out.println(helloService.hello("rpc" + i));
         }
 
-        Thread.sleep(3*1000);
+        for (int i = 100; i < 200; i++) {
+            System.out.println(helloService.hello("rpc" + i));
+        }
 
-        System.out.println(helloService.hello("rpc100"));
+        for (int i = 200; i < 300; i++) {
+            System.out.println(helloService.hello("rpc" + i));
+        }
     }
 }

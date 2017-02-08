@@ -20,6 +20,7 @@ public class NettyClient {
 
     private ConcurrentMap<Long, CompletableFuture<RpcResponse>> futureMap = new ConcurrentHashMap<>();
     private Channel channel;
+    private EventLoopGroup eventLoopGroup;
 
     public NettyClient(String host, int port) {
         this.host = host;
@@ -39,7 +40,7 @@ public class NettyClient {
 
     private void connect() {
         Bootstrap b = new Bootstrap();
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+        eventLoopGroup = new NioEventLoopGroup();
         RpcClientHandler clientHandler = new RpcClientHandler(this);
         b.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -87,5 +88,17 @@ public class NettyClient {
 
     public void removeFuture(Long requestId) {
         futureMap.remove(requestId);
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void close() {
+        eventLoopGroup.shutdownGracefully();
     }
 }

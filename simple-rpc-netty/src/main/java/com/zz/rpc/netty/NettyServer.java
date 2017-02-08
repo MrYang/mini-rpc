@@ -12,14 +12,16 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class NettyServer {
 
     private int port;
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
 
     public NettyServer(int port) {
         this.port = port;
     }
 
     public void start() {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -40,9 +42,11 @@ public class NettyServer {
             f.channel().closeFuture().sync();
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
         }
+    }
+
+    public void close() {
+        workerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
     }
 }

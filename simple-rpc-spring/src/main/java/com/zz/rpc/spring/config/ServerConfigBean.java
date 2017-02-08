@@ -3,6 +3,7 @@ package com.zz.rpc.spring.config;
 import com.zz.rpc.netty.NettyServer;
 import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -10,10 +11,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-public class ServerConfigBean implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware {
+public class ServerConfigBean implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware, DisposableBean {
 
     private String id;
     private Integer port;
+    private ApplicationContext applicationContext;
+    private NettyServer nettyServer;
 
     public String getId() {
         return id;
@@ -33,6 +36,7 @@ public class ServerConfigBean implements ApplicationListener<ContextRefreshedEve
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
         RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
         String registryAddress = registryConfigBean.getAddress();
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(ZookeeperServiceRegistry.class);
@@ -43,6 +47,17 @@ public class ServerConfigBean implements ApplicationListener<ContextRefreshedEve
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        new NettyServer(port).start();
+        new Thread(() -> {
+            nettyServer = new NettyServer(port);
+            nettyServer.start();
+        }).start();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        nettyServer.close();
+        System.out.println("destroy");
+        ZookeeperServiceRegistry zookeeperServiceRegistry = applicationContext.getBean(ZookeeperServiceRegistry.class);
+        zookeeperServiceRegistry.unRegister("");
     }
 }
