@@ -73,9 +73,19 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="client">
+    <xsd:element name="protocol">
         <xsd:complexType>
             <xsd:attribute name="id" type="xsd:ID"/>
+            <xsd:attribute name="haStrategy" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ haStrategy ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="loadbalance" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ loadbalance ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

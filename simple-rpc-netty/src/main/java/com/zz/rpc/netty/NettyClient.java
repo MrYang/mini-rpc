@@ -1,5 +1,6 @@
 package com.zz.rpc.netty;
 
+import com.zz.rpc.core.rpc.RpcClient;
 import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
 import io.netty.bootstrap.Bootstrap;
@@ -13,13 +14,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-public class NettyClient {
+public class NettyClient implements RpcClient {
 
     private String host;
     private int port;
 
     private ConcurrentMap<Long, CompletableFuture<RpcResponse>> futureMap = new ConcurrentHashMap<>();
-    private Channel channel;
+    private volatile Channel channel;
     private EventLoopGroup eventLoopGroup;
 
     public NettyClient(String host, int port) {

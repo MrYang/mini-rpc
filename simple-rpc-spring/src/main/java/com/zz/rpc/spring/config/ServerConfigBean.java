@@ -1,11 +1,10 @@
 package com.zz.rpc.spring.config;
 
+import com.zz.rpc.core.registry.ServiceRegistry;
+import com.zz.rpc.core.rpc.RpcServer;
 import com.zz.rpc.netty.NettyServer;
-import com.zz.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
@@ -16,7 +15,7 @@ public class ServerConfigBean implements ApplicationListener<ContextRefreshedEve
     private String id;
     private Integer port;
     private ApplicationContext applicationContext;
-    private NettyServer nettyServer;
+    private RpcServer rpcServer;
 
     public String getId() {
         return id;
@@ -37,26 +36,20 @@ public class ServerConfigBean implements ApplicationListener<ContextRefreshedEve
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
-        RegistryConfigBean registryConfigBean = applicationContext.getBean(RegistryConfigBean.class);
-        String registryAddress = registryConfigBean.getAddress();
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(ZookeeperServiceRegistry.class);
-        beanDefinitionBuilder.addConstructorArgValue(registryAddress);
-        DefaultListableBeanFactory acf = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
-        acf.registerBeanDefinition("zookeeperServiceRegistry", beanDefinitionBuilder.getBeanDefinition());
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         new Thread(() -> {
-            nettyServer = new NettyServer(port);
-            nettyServer.start();
+            rpcServer = new NettyServer(port);
+            rpcServer.start();
         }).start();
     }
 
     @Override
     public void destroy() throws Exception {
-        nettyServer.close();
-        ZookeeperServiceRegistry zookeeperServiceRegistry = applicationContext.getBean(ZookeeperServiceRegistry.class);
-        zookeeperServiceRegistry.unRegister();
+        rpcServer.close();
+        ServiceRegistry serviceRegistry = applicationContext.getBean(ServiceRegistry.class);
+        serviceRegistry.unRegister();
     }
 }

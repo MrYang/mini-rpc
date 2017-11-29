@@ -1,7 +1,6 @@
 package com.zz.rpc.netty;
 
-import com.zz.rpc.core.rpc.RpcRequest;
-import com.zz.rpc.core.rpc.RpcResponse;
+import com.zz.rpc.core.rpc.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.util.ClassUtils;
@@ -10,11 +9,8 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
-
-    public static Map<String, Object> serviceMap = new ConcurrentHashMap<>();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest req) throws Exception {
@@ -27,7 +23,11 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
         Class<?>[] parameterTypes = req.getParameterTypes();
         Object[] parameters = req.getParameters();
 
-        Object object = serviceMap.get(interfaceName);
+        Map<String, String> attachments = req.getAttachments();
+        String version = attachments.get(RpcParamEnum.version.name());
+        String group = attachments.get(RpcParamEnum.group.name());
+        String key = RpcServiceParams.key(version, group, interfaceName);
+        Object object = RpcServiceUtils.serviceMap.get(key);
         Method method = ClassUtils.getMethod(object.getClass(), methodName, parameterTypes);
         try {
             Instant start = Instant.now();

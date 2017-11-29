@@ -1,8 +1,9 @@
 package com.zz.rpc.netty;
 
-import com.zz.rpc.core.filter.FilterProcessor;
+import com.zz.rpc.core.rpc.RpcParamEnum;
 import com.zz.rpc.core.rpc.RpcRequest;
 import com.zz.rpc.core.rpc.RpcResponse;
+import com.zz.rpc.core.rpc.RpcServiceParams;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -11,15 +12,15 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class RefererInvocationHandler<T> implements InvocationHandler {
+public class RefererInvocationHandler implements InvocationHandler {
 
     private AtomicLong atomicLong = new AtomicLong(0);
 
-    private Class<T> clz;
+    private RpcServiceParams params;
     private List<NettyClient> clients;
 
-    public RefererInvocationHandler(Class<T> clz, List<NettyClient> clients) {
-        this.clz = clz;
+    public RefererInvocationHandler(RpcServiceParams params, List<NettyClient> clients) {
+        this.params = params;
         this.clients = clients;
     }
 
@@ -30,16 +31,16 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setMethodName(method.getName());
         request.setParameters(args);
         request.setParameterTypes(method.getParameterTypes());
-        request.setInterfaceName(clz.getName());
+        request.setInterfaceName(params.getInterfaceName());
+        request.addAttachment(RpcParamEnum.version.name(), params.getVersion());
+        request.addAttachment(RpcParamEnum.group.name(), params.getGroup());
 
-        FilterProcessor.before(request);
         NettyClient client = clients.get(new Random().nextInt(clients.size()));
         CompletableFuture<RpcResponse> future = client.sendRequest(request);
         if (future == null) {
             throw new RuntimeException("future is null");
         }
         RpcResponse response = future.get();
-        FilterProcessor.after(response);
         return response.getResult();
     }
 

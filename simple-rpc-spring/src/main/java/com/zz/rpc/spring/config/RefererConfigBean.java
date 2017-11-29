@@ -2,9 +2,9 @@ package com.zz.rpc.spring.config;
 
 import com.zz.rpc.core.registry.Callback;
 import com.zz.rpc.core.registry.ServiceDiscovery;
+import com.zz.rpc.core.rpc.RpcServiceParams;
 import com.zz.rpc.netty.NettyClient;
 import com.zz.rpc.netty.RefererInvocationHandler;
-import com.zz.rpc.registry.zookeeper.ZookeeperServiceDiscovery;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +20,13 @@ public class RefererConfigBean<T> implements FactoryBean<T>, ApplicationContextA
 
     private String id;
     private Class<T> interfaceClass;
+
+    private String group;
+    private String version;
+    private int requestTimeout; // 请求超时时间
+    private int connectTimeout; // 连接超时时间
+    private int retries;        // 重试次数
+    private String registry;    // 注册到多个注册中心的id
 
     public String getId() {
         return id;
@@ -39,7 +46,8 @@ public class RefererConfigBean<T> implements FactoryBean<T>, ApplicationContextA
 
     @Override
     public T getObject() throws Exception {
-        return (T) Proxy.newProxyInstance(RefererConfigBean.class.getClassLoader(), new Class<?>[]{interfaceClass}, new RefererInvocationHandler(interfaceClass, clients));
+        RpcServiceParams params = new RpcServiceParams(version, interfaceClass.getName(), group);
+        return (T) Proxy.newProxyInstance(RefererConfigBean.class.getClassLoader(), new Class<?>[]{interfaceClass}, new RefererInvocationHandler(params, clients));
     }
 
     @Override
@@ -54,7 +62,7 @@ public class RefererConfigBean<T> implements FactoryBean<T>, ApplicationContextA
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ServiceDiscovery serviceDiscovery = applicationContext.getBean(ZookeeperServiceDiscovery.class);
+        ServiceDiscovery serviceDiscovery = applicationContext.getBean(ServiceDiscovery.class);
         String serviceAddress = serviceDiscovery.discover(interfaceClass.getName(), new Callback() {
             @Override
             public void add(String serverAddress) {

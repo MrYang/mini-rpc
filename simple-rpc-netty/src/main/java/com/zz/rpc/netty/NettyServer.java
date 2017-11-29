@@ -1,5 +1,6 @@
 package com.zz.rpc.netty;
 
+import com.zz.rpc.core.rpc.RpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,7 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class NettyServer {
+public class NettyServer implements RpcServer {
 
     private int port;
     private EventLoopGroup bossGroup;
@@ -19,6 +20,7 @@ public class NettyServer {
         this.port = port;
     }
 
+    @Override
     public void start() {
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
@@ -45,6 +47,7 @@ public class NettyServer {
         }
     }
 
+    @Override
     public void close() {
         workerGroup.shutdownGracefully();
         bossGroup.shutdownGracefully();

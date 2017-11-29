@@ -16,6 +16,7 @@ subprojects { subproj ->
 
     dependencies {
         compile 'org.springframework:spring-context:4.3.3.RELEASE'
+        compile 'org.slf4j:slf4j-api:1.7.21'
         testCompile 'junit:junit:4.12'
     }
 }
@@ -23,15 +24,22 @@ subprojects { subproj ->
 project(":simple-rpc-netty") {
     dependencies {
         compile project(":simple-rpc-core")
-        compile project(":simple-rpc-registry:registry-zookeeper")
         compile 'io.netty:netty-all:4.0.30.Final'
     }
 }
 
 project(":simple-rpc-spring") {
     dependencies {
+        compile project(":simple-rpc-core")
         compile project(":simple-rpc-netty")
-        compile project(":simple-rpc-registry:registry-zookeeper")
+    }
+}
+
+project(":simple-rpc-registry:registry-zookeeper") {
+    dependencies {
+        compile project(":simple-rpc-core")
+        compile 'org.apache.zookeeper:zookeeper:3.4.9'
+        compile 'org.apache.curator:curator-recipes:2.11.1'
     }
 }
 
@@ -40,6 +48,7 @@ project(":simple-rpc-demo:demo-server") {
         compile project(":simple-rpc-demo:demo-api")
         compile project(":simple-rpc-spring")
         compile project(":simple-rpc-netty")
+        compile project(":simple-rpc-registry:registry-zookeeper")
     }
 }
 
@@ -48,13 +57,6 @@ project(":simple-rpc-demo:demo-client") {
         compile project(":simple-rpc-demo:demo-api")
         compile project(":simple-rpc-spring")
         compile project(":simple-rpc-netty")
-    }
-}
-
-project(":simple-rpc-registry:registry-zookeeper") {
-    dependencies {
-        compile project(":simple-rpc-core")
-        compile 'org.apache.curator:curator-recipes:2.11.1'
-        compile 'org.apache.zookeeper:zookeeper:3.4.9'
+        compile project(":simple-rpc-registry:registry-zookeeper")
     }
 }
