@@ -15,46 +15,47 @@ subprojects { subproj ->
     }
 
     dependencies {
-        compile 'org.springframework:spring-context:4.3.3.RELEASE'
-        testCompile 'junit:junit:4.12'
+        implementation 'org.springframework:spring-context:4.3.3.RELEASE'
+        testImplementation 'junit:junit:4.12'
     }
 }
 
-project(":simple-rpc-netty") {
+project(":mini-rpc-netty") {
     dependencies {
-        compile project(":simple-rpc-core")
-        compile project(":simple-rpc-registry:registry-zookeeper")
-        compile 'io.netty:netty-all:4.0.30.Final'
+        implementation project(":mini-rpc-core")
+        implementation project(":mini-rpc-registry:registry-zookeeper")
+        implementation 'io.netty:netty-all:4.0.30.Final'
     }
 }
 
-project(":simple-rpc-spring") {
+project(":mini-rpc-spring") {
     dependencies {
-        compile project(":simple-rpc-netty")
-        compile project(":simple-rpc-registry:registry-zookeeper")
+        implementation project(":mini-rpc-netty")
+        implementation project(":mini-rpc-registry:registry-zookeeper")
+        implementation project(":mini-rpc-core")
     }
 }
 
-project(":simple-rpc-demo:demo-server") {
+project(":mini-rpc-demo:demo-server") {
     dependencies {
-        compile project(":simple-rpc-demo:demo-api")
-        compile project(":simple-rpc-spring")
-        compile project(":simple-rpc-netty")
+        implementation project(":mini-rpc-demo:demo-api")
+        implementation project(":mini-rpc-spring")
+        implementation project(":mini-rpc-netty")
     }
 }
 
-project(":simple-rpc-demo:demo-client") {
+project(":mini-rpc-demo:demo-client") {
     dependencies {
-        compile project(":simple-rpc-demo:demo-api")
-        compile project(":simple-rpc-spring")
-        compile project(":simple-rpc-netty")
+        implementation project(":mini-rpc-demo:demo-api")
+        implementation project(":mini-rpc-spring")
+        implementation project(":mini-rpc-netty")
     }
 }
 
-project(":simple-rpc-registry:registry-zookeeper") {
+project(":mini-rpc-registry:registry-zookeeper") {
     dependencies {
-        compile project(":simple-rpc-core")
-        compile 'org.apache.curator:curator-recipes:2.11.1'
-        compile 'org.apache.zookeeper:zookeeper:3.4.9'
+        implementation project(":mini-rpc-core")
+        implementation 'org.apache.curator:curator-recipes:2.11.1'
+        implementation 'org.apache.zookeeper:zookeeper:3.4.9'
     }
 }

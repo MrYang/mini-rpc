@@ -15,4 +15,7 @@ out
 .metadata
 
 /.gradle
+/gradle
 **/.gradle
+gradlew
+gradlew.bat
